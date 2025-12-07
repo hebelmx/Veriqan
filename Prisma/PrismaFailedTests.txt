@@ -1,0 +1,1048 @@
+   ExxerCube.Prisma.Tests.System.Ocr.Pipeline (11 tests) [0:46.841] Failed: 11 tests failed
+    ExxerCube.Prisma.Tests.System (11 tests) [0:46.841] Failed: 11 tests failed
+     AnalyticalFilterE2ETests (5 tests) [0:14.129] Failed: One or more child tests failed: 5 tests failed
+      Analytical filter should improve OCR quality (Levenshtein distance) (5 tests) [0:14.128] Failed: One or more child tests failed: 5 tests failed
+       Analytical filter should improve OCR quality (Levenshtein distance)(qualityLevel: "Q1_Poor", filename: "333BBB-44444444442025_page1.png") [0:03.569] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"¡ / ¡ ¡ ¡
+HE H ) JH ) HE JA
+4 d ¿ A
+en a ar pa er?
+. A
+AN a
+Agente m0 ae Porsa e manual
+Ñ e Py Lao A..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 433
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AnalyticalFilter_ShouldImproveOcrQuality_MeasuredByLevenshteinDistance(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         ANALYTICAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ AnalyticalFilterSelectionStrategy initialized (data-driven, 820 OCR runs)
+✓ IImageQualityAnalyzer initialized
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q1_Poor      | 333BBB-44444444442025_page1.png          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q1_Poor\333BBB-44444444442025_page1.png
+✓ Image loaded: 1,341,303 bytes
+✓ Ground truth loaded: 423 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 2549ms
+  Extracted 1842 characters
+
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1634 edits
+  Error Rate: 386.29% (1634/423 chars)
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: IMAGE QUALITY ANALYSIS                                  │
+└──────────────────────────────────────────────────────────────────┘
+✓ Quality analysis completed
+  Quality Level: Q4 - Very Low
+  Metrics:
+    Blur Score:     891.80
+    Noise Level:    0.09
+    Contrast Level: 0.24
+    Sharpness:      1.00
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: ANALYTICAL FILTER SELECTION                             │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter selected by analytical strategy (820 OCR baseline runs)
+  Filter Type: PIL Simple
+  Enhancement Enabled: True
+  PIL Parameters (NSGA-II optimized):
+    Contrast Factor: 1.9500
+    Median Size: 5
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: APPLY SELECTED FILTER                                   │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter applied: 56ms
+  Enhanced image: 222,111 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ENHANCED OCR                                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Enhanced OCR completed: 474ms
+  Extracted 189 characters
+
+📊 ENHANCED METRICS:
+  Levenshtein Distance: 350 edits
+  Error Rate: 82.74% (350/423 chars)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:       1634 edits                             ║
+║ Enhanced Distance:        350 edits                             ║
+║ Improvement:             1284 edits ( 78.58%)                  ║
+║                                                                  ║
+║ Total Time:              3527ms                              ║
+║   Baseline OCR:          2549ms                              ║
+║   Enhanced OCR:           474ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Analytical filter should improve OCR quality (Levenshtein distance)(qualityLevel: "Q1_Poor", filename: "333ccc-6666666662025_page1.png") [0:01.479] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"PA
+eo e? o? e? to
+U . a
+E 3"
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 433
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AnalyticalFilter_ShouldImproveOcrQuality_MeasuredByLevenshteinDistance(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         ANALYTICAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ AnalyticalFilterSelectionStrategy initialized (data-driven, 820 OCR runs)
+✓ IImageQualityAnalyzer initialized
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q1_Poor      | 333ccc-6666666662025_page1.png           ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q1_Poor\333ccc-6666666662025_page1.png
+✓ Image loaded: 1,188,804 bytes
+✓ Ground truth loaded: 484 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1178ms
+  Extracted 1188 characters
+
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1016 edits
+  Error Rate: 209.92% (1016/484 chars)
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: IMAGE QUALITY ANALYSIS                                  │
+└──────────────────────────────────────────────────────────────────┘
+✓ Quality analysis completed
+  Quality Level: Q4 - Very Low
+  Metrics:
+    Blur Score:     579.24
+    Noise Level:    0.07
+    Contrast Level: 0.21
+    Sharpness:      0.83
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: ANALYTICAL FILTER SELECTION                             │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter selected by analytical strategy (820 OCR baseline runs)
+  Filter Type: PIL Simple
+  Enhancement Enabled: True
+  PIL Parameters (NSGA-II optimized):
+    Contrast Factor: 1.9500
+    Median Size: 5
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: APPLY SELECTED FILTER                                   │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter applied: 46ms
+  Enhanced image: 161,994 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ENHANCED OCR                                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Enhanced OCR completed: 175ms
+  Extracted 27 characters
+
+📊 ENHANCED METRICS:
+  Levenshtein Distance: 462 edits
+  Error Rate: 95.45% (462/484 chars)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:       1016 edits                             ║
+║ Enhanced Distance:        462 edits                             ║
+║ Improvement:              554 edits ( 54.53%)                  ║
+║                                                                  ║
+║ Total Time:              1477ms                              ║
+║   Baseline OCR:          1178ms                              ║
+║   Enhanced OCR:           175ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Analytical filter should improve OCR quality (Levenshtein distance)(qualityLevel: "Q2_MediumPoor", filename: "333BBB-44444444442025_page1.png") [0:03.021] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"á A Á 4 A
+Acrmirustiación Genera: de Auartone Fiscal Fedora
+hnmenerración Descuncentiada de Auditori..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 433
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AnalyticalFilter_ShouldImproveOcrQuality_MeasuredByLevenshteinDistance(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         ANALYTICAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ AnalyticalFilterSelectionStrategy initialized (data-driven, 820 OCR runs)
+✓ IImageQualityAnalyzer initialized
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 333BBB-44444444442025_page1.png          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\333BBB-44444444442025_page1.png
+✓ Image loaded: 1,239,189 bytes
+✓ Ground truth loaded: 423 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 2007ms
+  Extracted 2060 characters
+
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1831 edits
+  Error Rate: 432.86% (1831/423 chars)
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: IMAGE QUALITY ANALYSIS                                  │
+└──────────────────────────────────────────────────────────────────┘
+✓ Quality analysis completed
+  Quality Level: Q4 - Very Low
+  Metrics:
+    Blur Score:     1201.88
+    Noise Level:    0.07
+    Contrast Level: 0.17
+    Sharpness:      0.98
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: ANALYTICAL FILTER SELECTION                             │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter selected by analytical strategy (820 OCR baseline runs)
+  Filter Type: PIL Simple
+  Enhancement Enabled: True
+  PIL Parameters (NSGA-II optimized):
+    Contrast Factor: 1.5046
+    Median Size: 3
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: APPLY SELECTED FILTER                                   │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter applied: 40ms
+  Enhanced image: 626,837 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ENHANCED OCR                                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Enhanced OCR completed: 888ms
+  Extracted 1677 characters
+
+📊 ENHANCED METRICS:
+  Levenshtein Distance: 1482 edits
+  Error Rate: 350.35% (1482/423 chars)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:       1831 edits                             ║
+║ Enhanced Distance:       1482 edits                             ║
+║ Improvement:              349 edits ( 19.06%)                  ║
+║                                                                  ║
+║ Total Time:              3020ms                              ║
+║   Baseline OCR:          2007ms                              ║
+║   Enhanced OCR:           888ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Analytical filter should improve OCR quality (Levenshtein distance)(qualityLevel: "Q2_MediumPoor", filename: "333ccc-6666666662025_page1.png") [0:02.386] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+", . ,
+Á Á Á
+4 A A 4 A
+Acrremisración Generai de Auctona Fiscal Federa -
+acrmimstración Desconcentrad..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 433
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AnalyticalFilter_ShouldImproveOcrQuality_MeasuredByLevenshteinDistance(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         ANALYTICAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ AnalyticalFilterSelectionStrategy initialized (data-driven, 820 OCR runs)
+✓ IImageQualityAnalyzer initialized
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 333ccc-6666666662025_page1.png           ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\333ccc-6666666662025_page1.png
+✓ Image loaded: 1,177,561 bytes
+✓ Ground truth loaded: 484 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1645ms
+  Extracted 1564 characters
+
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1366 edits
+  Error Rate: 282.23% (1366/484 chars)
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: IMAGE QUALITY ANALYSIS                                  │
+└──────────────────────────────────────────────────────────────────┘
+✓ Quality analysis completed
+  Quality Level: Q4 - Very Low
+  Metrics:
+    Blur Score:     1088.81
+    Noise Level:    0.07
+    Contrast Level: 0.16
+    Sharpness:      0.82
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: ANALYTICAL FILTER SELECTION                             │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter selected by analytical strategy (820 OCR baseline runs)
+  Filter Type: PIL Simple
+  Enhancement Enabled: True
+  PIL Parameters (NSGA-II optimized):
+    Contrast Factor: 1.5046
+    Median Size: 3
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: APPLY SELECTED FILTER                                   │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter applied: 41ms
+  Enhanced image: 459,181 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ENHANCED OCR                                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Enhanced OCR completed: 606ms
+  Extracted 904 characters
+
+📊 ENHANCED METRICS:
+  Levenshtein Distance: 769 edits
+  Error Rate: 158.88% (769/484 chars)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:       1366 edits                             ║
+║ Enhanced Distance:        769 edits                             ║
+║ Improvement:              597 edits ( 43.70%)                  ║
+║                                                                  ║
+║ Total Time:              2377ms                              ║
+║   Baseline OCR:          1645ms                              ║
+║   Enhanced OCR:           606ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Analytical filter should improve OCR quality (Levenshtein distance)(qualityLevel: "Q2_MediumPoor", filename: "555CCC-66666662025_page1.png") [0:03.670] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"Administración Genersi de Auditoría Fiscal Federal
+Administración Desconcentrada de Auditoría Fiscal..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 433
+   at ExxerCube.Prisma.Tests.System.AnalyticalFilterE2ETests.AnalyticalFilter_ShouldImproveOcrQuality_MeasuredByLevenshteinDistance(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\AnalyticalFilterE2ETests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         ANALYTICAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ AnalyticalFilterSelectionStrategy initialized (data-driven, 820 OCR runs)
+✓ IImageQualityAnalyzer initialized
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 555CCC-66666662025_page1.png             ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\555CCC-66666662025_page1.png
+✓ Image loaded: 1,248,550 bytes
+✓ Ground truth loaded: 400 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 2597ms
+  Extracted 2896 characters
+
+📊 BASELINE METRICS:
+  Levenshtein Distance: 2679 edits
+  Error Rate: 669.75% (2679/400 chars)
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: IMAGE QUALITY ANALYSIS                                  │
+└──────────────────────────────────────────────────────────────────┘
+✓ Quality analysis completed
+  Quality Level: Q4 - Very Low
+  Metrics:
+    Blur Score:     1441.23
+    Noise Level:    0.09
+    Contrast Level: 0.23
+    Sharpness:      1.00
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: ANALYTICAL FILTER SELECTION                             │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter selected by analytical strategy (820 OCR baseline runs)
+  Filter Type: PIL Simple
+  Enhancement Enabled: True
+  PIL Parameters (NSGA-II optimized):
+    Contrast Factor: 1.5046
+    Median Size: 3
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: APPLY SELECTED FILTER                                   │
+└──────────────────────────────────────────────────────────────────┘
+✓ Filter applied: 48ms
+  Enhanced image: 663,476 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ENHANCED OCR                                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Enhanced OCR completed: 924ms
+  Extracted 1834 characters
+
+📊 ENHANCED METRICS:
+  Levenshtein Distance: 1655 edits
+  Error Rate: 413.75% (1655/400 chars)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:       2679 edits                             ║
+║ Enhanced Distance:       1655 edits                             ║
+║ Improvement:             1024 edits ( 38.22%)                  ║
+║                                                                  ║
+║ Total Time:              3669ms                              ║
+║   Baseline OCR:          2597ms                              ║
+║   Enhanced OCR:           924ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+     DocumentPipelineEventPersistenceTests (1 test) [0:09.073] Failed: One or more child tests failed: 1 test failed
+      FullPipeline_PublishesMultipleEvents_AllPersistWithCorrectOrdering [0:05.661] Failed: Shouldly.ShouldAssertException: auditRecords.Count
+Shouldly.ShouldAssertException
+auditRecords.Count
+    should be
+2
+    but was
+0
+
+Additional Info:
+    Both ingestion and OCR events should be persisted
+   at ExxerCube.Prisma.Tests.System.DocumentPipelineEventPersistenceTests.FullPipeline_PublishesMultipleEvents_AllPersistWithCorrectOrdering() in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\DocumentPipelineEventPersistenceTests.cs:line 221
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+EventPersistenceWorker starting - subscribing to domain events
+Publishing event DocumentDownloadedEvent with ID 029439a0-7d38-49cb-a6cf-50dd5492cf8d (Correlation: d2df94c7-c7c5-4209-bf8b-c1069617f6d2)
+Publishing event OcrCompletedEvent with ID a2a43f42-017c-4dcc-afe0-4fcee984e106 (Correlation: d2df94c7-c7c5-4209-bf8b-c1069617f6d2)
+EventPersistenceWorker stopping - unsubscribing from domain events
+
+     PolynomialFilterE2ETests (5 tests) [0:13.718] Failed: One or more child tests failed: 5 tests failed
+      Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%) (5 tests) [0:13.718] Failed: One or more child tests failed: 5 tests failed
+       Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%)(qualityLevel: "Q1_Poor", filename: "333BBB-44444444442025_page1.png") [0:02.505] Failed: Shouldly.ShouldAssertException: polynomialImprovementPercent
+Shouldly.ShouldAssertException
+polynomialImprovementPercent
+    should be greater than or equal to
+10d
+    but was
+0.7343941248470013d
+
+Additional Info:
+    Polynomial enhancement should improve OCR by at least 10% over baseline on degraded images.
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.PolynomialFilter_ShouldImproveOcrQuality_BetterThanAnalytical(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 382
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         POLYNOMIAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ PolynomialImageQualityAnalyzer initialized (GA-trained, R² > 0.89)
+✓ AnalyticalFilterSelectionStrategy initialized (for comparison)
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q1_Poor      | 333BBB-44444444442025_page1.png          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q1_Poor\333BBB-44444444442025_page1.png
+✓ Image loaded: 1,341,303 bytes
+✓ Ground truth loaded: 423 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1462ms
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1634 edits
+  Error Rate: 386.29%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: POLYNOMIAL FEATURE EXTRACTION & PREDICTION              │
+└──────────────────────────────────────────────────────────────────┘
+Extracted features: ImagePropertyFeatures(BlurScore=891.64, Contrast=30.14, NoiseEstimate=14.13, EdgeDensity=0.0775)
+Predicted parameters: PolynomialFilterParams(Contrast=1.13, Brightness=1.17, Sharpness=2.67, UnsharpRadius=3.64, UnsharpPercent=0.00)
+✓ Feature extraction completed
+  Image Features:
+    Blur Score:     891.64
+    Noise Level:    0.28
+    Contrast Level: 0.50
+    Sharpness:      0.78
+
+✓ Parameter prediction completed (GA-optimized, R² > 0.89)
+  Predicted Parameters:
+    Contrast:       1.129
+    Brightness:     1.174
+    Sharpness:      2.665
+    Unsharp Radius: 3.635
+    Unsharp %:      0.0
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: APPLY POLYNOMIAL ENHANCEMENT                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial filter applied: 52ms
+  Enhanced image: 634,628 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: ENHANCED OCR (POLYNOMIAL)                               │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial OCR completed: 915ms
+📊 POLYNOMIAL METRICS:
+  Levenshtein Distance: 1622 edits
+  Error Rate: 383.45%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ANALYTICAL FILTER (COMPARISON)                          │
+└──────────────────────────────────────────────────────────────────┘
+✓ Analytical filter selected: PIL Simple
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:        1634 edits                         ║
+║ Polynomial Distance:      1622 edits                         ║
+║ Polynomial Improve:         12 edits (  0.73%)    ║
+║                                                                  ║
+║ Expected from validation:                                        ║
+║   Polynomial Model:    18.4% improvement                         ║
+║   Lookup Table:        12.3% improvement                         ║
+║                                                                  ║
+║ Total Time:               2502ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%)(qualityLevel: "Q1_Poor", filename: "333ccc-6666666662025_page1.png") [0:01.948] Failed: Shouldly.ShouldAssertException: polynomialImprovementPercent
+Shouldly.ShouldAssertException
+polynomialImprovementPercent
+    should be greater than or equal to
+10d
+    but was
+-1.673228346456693d
+
+Additional Info:
+    Polynomial enhancement should improve OCR by at least 10% over baseline on degraded images.
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.PolynomialFilter_ShouldImproveOcrQuality_BetterThanAnalytical(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 382
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         POLYNOMIAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ PolynomialImageQualityAnalyzer initialized (GA-trained, R² > 0.89)
+✓ AnalyticalFilterSelectionStrategy initialized (for comparison)
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q1_Poor      | 333ccc-6666666662025_page1.png           ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q1_Poor\333ccc-6666666662025_page1.png
+✓ Image loaded: 1,188,804 bytes
+✓ Ground truth loaded: 484 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1091ms
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1016 edits
+  Error Rate: 209.92%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: POLYNOMIAL FEATURE EXTRACTION & PREDICTION              │
+└──────────────────────────────────────────────────────────────────┘
+Extracted features: ImagePropertyFeatures(BlurScore=579.09, Contrast=26.78, NoiseEstimate=10.56, EdgeDensity=0.0571)
+Predicted parameters: PolynomialFilterParams(Contrast=1.27, Brightness=1.13, Sharpness=2.01, UnsharpRadius=3.99, UnsharpPercent=81.96)
+✓ Feature extraction completed
+  Image Features:
+    Blur Score:     579.09
+    Noise Level:    0.21
+    Contrast Level: 0.45
+    Sharpness:      0.57
+
+✓ Parameter prediction completed (GA-optimized, R² > 0.89)
+  Predicted Parameters:
+    Contrast:       1.267
+    Brightness:     1.135
+    Sharpness:      2.014
+    Unsharp Radius: 3.989
+    Unsharp %:      82.0
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: APPLY POLYNOMIAL ENHANCEMENT                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial filter applied: 49ms
+  Enhanced image: 388,317 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: ENHANCED OCR (POLYNOMIAL)                               │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial OCR completed: 745ms
+📊 POLYNOMIAL METRICS:
+  Levenshtein Distance: 1033 edits
+  Error Rate: 213.43%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ANALYTICAL FILTER (COMPARISON)                          │
+└──────────────────────────────────────────────────────────────────┘
+✓ Analytical filter selected: PIL Simple
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:        1016 edits                         ║
+║ Polynomial Distance:      1033 edits                         ║
+║ Polynomial Improve:        -17 edits ( -1.67%)    ║
+║                                                                  ║
+║ Expected from validation:                                        ║
+║   Polynomial Model:    18.4% improvement                         ║
+║   Lookup Table:        12.3% improvement                         ║
+║                                                                  ║
+║ Total Time:               1947ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%)(qualityLevel: "Q2_MediumPoor", filename: "333BBB-44444444442025_page1.png") [0:02.727] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"se o pa
+Lo ps E E HA -
+o EA: TED -. TE.
+Eb A A A, A O A
+A A E 1 E es
+ES ua A IO
+E A AA Gi
+Ps E Ed m
+..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 407
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.PolynomialFilter_ShouldImproveOcrQuality_BetterThanAnalytical(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 386
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         POLYNOMIAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ PolynomialImageQualityAnalyzer initialized (GA-trained, R² > 0.89)
+✓ AnalyticalFilterSelectionStrategy initialized (for comparison)
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 333BBB-44444444442025_page1.png          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\333BBB-44444444442025_page1.png
+✓ Image loaded: 1,239,189 bytes
+✓ Ground truth loaded: 423 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1968ms
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1831 edits
+  Error Rate: 432.86%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: POLYNOMIAL FEATURE EXTRACTION & PREDICTION              │
+└──────────────────────────────────────────────────────────────────┘
+Extracted features: ImagePropertyFeatures(BlurScore=1201.73, Contrast=21.41, NoiseEstimate=17.34, EdgeDensity=0.0760)
+Predicted parameters: PolynomialFilterParams(Contrast=1.97, Brightness=1.18, Sharpness=1.96, UnsharpRadius=4.44, UnsharpPercent=0.00)
+✓ Feature extraction completed
+  Image Features:
+    Blur Score:     1201.73
+    Noise Level:    0.35
+    Contrast Level: 0.36
+    Sharpness:      0.76
+
+✓ Parameter prediction completed (GA-optimized, R² > 0.89)
+  Predicted Parameters:
+    Contrast:       1.974
+    Brightness:     1.175
+    Sharpness:      1.963
+    Unsharp Radius: 4.440
+    Unsharp %:      0.0
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: APPLY POLYNOMIAL ENHANCEMENT                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial filter applied: 44ms
+  Enhanced image: 221,773 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: ENHANCED OCR (POLYNOMIAL)                               │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial OCR completed: 648ms
+📊 POLYNOMIAL METRICS:
+  Levenshtein Distance: 342 edits
+  Error Rate: 80.85%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ANALYTICAL FILTER (COMPARISON)                          │
+└──────────────────────────────────────────────────────────────────┘
+✓ Analytical filter selected: PIL Simple
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:        1831 edits                         ║
+║ Polynomial Distance:       342 edits                         ║
+║ Polynomial Improve:       1489 edits ( 81.32%)    ║
+║                                                                  ║
+║ Expected from validation:                                        ║
+║   Polynomial Model:    18.4% improvement                         ║
+║   Lookup Table:        12.3% improvement                         ║
+║                                                                  ║
+║ Total Time:               2725ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%)(qualityLevel: "Q2_MediumPoor", filename: "333ccc-6666666662025_page1.png") [0:02.256] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"o z . PA ¿ e A añ
+e an pa E. BÉ. BR :
+a MS TE. GRE GEA
+A A E A E
+a EM Es Lt
+PA yd - .
+o ae 1 ma
+nl A..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 407
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.PolynomialFilter_ShouldImproveOcrQuality_BetterThanAnalytical(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 386
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         POLYNOMIAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ PolynomialImageQualityAnalyzer initialized (GA-trained, R² > 0.89)
+✓ AnalyticalFilterSelectionStrategy initialized (for comparison)
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 333ccc-6666666662025_page1.png           ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\333ccc-6666666662025_page1.png
+✓ Image loaded: 1,177,561 bytes
+✓ Ground truth loaded: 484 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 1741ms
+📊 BASELINE METRICS:
+  Levenshtein Distance: 1366 edits
+  Error Rate: 282.23%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: POLYNOMIAL FEATURE EXTRACTION & PREDICTION              │
+└──────────────────────────────────────────────────────────────────┘
+Extracted features: ImagePropertyFeatures(BlurScore=1088.66, Contrast=20.23, NoiseEstimate=15.18, EdgeDensity=0.0498)
+Predicted parameters: PolynomialFilterParams(Contrast=2.00, Brightness=1.16, Sharpness=1.78, UnsharpRadius=4.34, UnsharpPercent=0.00)
+✓ Feature extraction completed
+  Image Features:
+    Blur Score:     1088.66
+    Noise Level:    0.30
+    Contrast Level: 0.34
+    Sharpness:      0.50
+
+✓ Parameter prediction completed (GA-optimized, R² > 0.89)
+  Predicted Parameters:
+    Contrast:       2.000
+    Brightness:     1.159
+    Sharpness:      1.777
+    Unsharp Radius: 4.344
+    Unsharp %:      0.0
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: APPLY POLYNOMIAL ENHANCEMENT                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial filter applied: 43ms
+  Enhanced image: 182,739 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: ENHANCED OCR (POLYNOMIAL)                               │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial OCR completed: 406ms
+📊 POLYNOMIAL METRICS:
+  Levenshtein Distance: 395 edits
+  Error Rate: 81.61%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ANALYTICAL FILTER (COMPARISON)                          │
+└──────────────────────────────────────────────────────────────────┘
+✓ Analytical filter selected: PIL Simple
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:        1366 edits                         ║
+║ Polynomial Distance:       395 edits                         ║
+║ Polynomial Improve:        971 edits ( 71.08%)    ║
+║                                                                  ║
+║ Expected from validation:                                        ║
+║   Polynomial Model:    18.4% improvement                         ║
+║   Lookup Table:        12.3% improvement                         ║
+║                                                                  ║
+║ Total Time:               2255ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+       Polynomial filter should improve OCR quality better than Analytical (18.4% vs 12.3%)(qualityLevel: "Q2_MediumPoor", filename: "555CCC-66666662025_page1.png") [0:04.281] Failed: Shouldly.ShouldAssertException: enhancedText
+Shouldly.ShouldAssertException
+enhancedText
+    should contain (case insensitive comparison)
+"EXPEDIENTE"
+    but was actually
+"ai . . : ,
+: Pr Y o v 4
+dá á A a E SS
+A O Y E
+] La dd A A A E :
+y ME 7 O. E AE
+. A 11 Ta dl a A] PU ..."
+
+Additional Info:
+    Enhanced OCR must surface the EXPEDIENTE label
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.AssertMandatoryTokens(String enhancedText, String documentId) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 407
+   at ExxerCube.Prisma.Tests.System.PolynomialFilterE2ETests.PolynomialFilter_ShouldImproveOcrQuality_BetterThanAnalytical(String qualityLevel, String filename) in F:\Dynamic\ExxerCubeBanamex\ExxerCube.Prisma\Prisma\Code\Src\CSharp\04-Tests\03-System\Tests.System\PolynomialFilterE2ETests.cs:line 386
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 177
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+╔══════════════════════════════════════════════════════════════════╗
+║         POLYNOMIAL FILTER E2E TEST - INITIALIZATION            ║
+╚══════════════════════════════════════════════════════════════════╝
+✓ PolynomialImageQualityAnalyzer initialized (GA-trained, R² > 0.89)
+✓ AnalyticalFilterSelectionStrategy initialized (for comparison)
+✓ IOcrExecutor initialized (Tesseract)
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    TEST: Q2_MediumPoor | 555CCC-66666662025_page1.png             ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📁 Image Path: F:\Dynamic\ExxerCubeBanamex\BuildArtifacts\Prisma\bin\ExxerCube.Prisma.Tests.System.Ocr.Pipeline\Debug\net10.0\Fixtures\PRP1_Degraded\Q2_MediumPoor\555CCC-66666662025_page1.png
+✓ Image loaded: 1,248,550 bytes
+✓ Ground truth loaded: 400 characters
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: BASELINE OCR (NO FILTER)                                │
+└──────────────────────────────────────────────────────────────────┘
+✓ Baseline OCR completed: 2820ms
+📊 BASELINE METRICS:
+  Levenshtein Distance: 2679 edits
+  Error Rate: 669.75%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: POLYNOMIAL FEATURE EXTRACTION & PREDICTION              │
+└──────────────────────────────────────────────────────────────────┘
+Extracted features: ImagePropertyFeatures(BlurScore=1441.06, Contrast=29.05, NoiseEstimate=18.35, EdgeDensity=0.0845)
+Predicted parameters: PolynomialFilterParams(Contrast=1.44, Brightness=1.22, Sharpness=2.81, UnsharpRadius=4.14, UnsharpPercent=0.00)
+✓ Feature extraction completed
+  Image Features:
+    Blur Score:     1441.06
+    Noise Level:    0.37
+    Contrast Level: 0.48
+    Sharpness:      0.85
+
+✓ Parameter prediction completed (GA-optimized, R² > 0.89)
+  Predicted Parameters:
+    Contrast:       1.440
+    Brightness:     1.223
+    Sharpness:      2.806
+    Unsharp Radius: 4.135
+    Unsharp %:      0.0
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: APPLY POLYNOMIAL ENHANCEMENT                            │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial filter applied: 51ms
+  Enhanced image: 553,497 bytes
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: ENHANCED OCR (POLYNOMIAL)                               │
+└──────────────────────────────────────────────────────────────────┘
+✓ Polynomial OCR completed: 1302ms
+📊 POLYNOMIAL METRICS:
+  Levenshtein Distance: 1924 edits
+  Error Rate: 481.00%
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: ANALYTICAL FILTER (COMPARISON)                          │
+└──────────────────────────────────────────────────────────────────┘
+✓ Analytical filter selected: PIL Simple
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        FINAL RESULTS                             ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Baseline Distance:        2679 edits                         ║
+║ Polynomial Distance:      1924 edits                         ║
+║ Polynomial Improve:        755 edits ( 28.18%)    ║
+║                                                                  ║
+║ Expected from validation:                                        ║
+║   Polynomial Model:    18.4% improvement                         ║
+║   Lookup Table:        12.3% improvement                         ║
+║                                                                  ║
+║ Total Time:               4262ms                              ║
+╚══════════════════════════════════════════════════════════════════╝
+
